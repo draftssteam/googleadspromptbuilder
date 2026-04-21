@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Ads Prompt Builder — by Draftss</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.18);
+    --text: #f0f0f0;
+    --text-muted: #777;
+    --text-dim: #444;
+    --accent: #c8f060;
+    --accent-dark: #a0c840;
+    --accent-glow: rgba(200,240,96,0.12);
+    --red: #ff4d4d;
+    --blue: #4d9fff;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+  }
+
+  .logo-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid rgba(200,240,96,0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .btn-small {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-small:hover { border-color: var(--border-hover); color: var(--text); }
+
+  /* LAYOUT */
+  .wrapper {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* SIDEBAR / FORM */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 28px 24px;
+    overflow-y: auto;
+    height: calc(100vh - 56px);
+    position: sticky;
+    top: 56px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    margin-top: 24px;
+  }
+
+  .section-header:first-child { margin-top: 0; }
+
+  .section-num {
+    width: 20px;
+    height: 20px;
+    background: var(--accent);
+    color: #0a0a0a;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .field { margin-bottom: 12px; }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 5px;
+  }
+
+  .field input, .field textarea, .field select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .field input::placeholder, .field textarea::placeholder {
+    color: var(--text-dim);
+  }
+
+  .field textarea { resize: vertical; line-height: 1.5; }
+
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23555' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+  .field-tip {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* PRESETS */
+  .preset-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .preset-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* BUILD BUTTON */
+  .build-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    color: #0a0a0a;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 20px;
+  }
+  .build-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .build-btn:active { transform: translateY(0); }
+
+  /* MAIN PANEL */
+  .main {
+    padding: 32px;
+    overflow-y: auto;
+  }
+
+  .main-header {
+    margin-bottom: 28px;
+  }
+
+  .main-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .main-title span { color: var(--accent); }
+
+  .main-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  /* HOW IT WORKS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+  }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--accent);
+    opacity: 0.4;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .step-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* PROMPT OUTPUT */
+  .output-panel {
+    display: none;
+  }
+
+  .output-panel.visible { display: block; }
+
+  .output-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .output-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .output-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .output-actions { display: flex; gap: 8px; }
+
+  .action-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .action-btn:hover { border-color: var(--border-hover); }
+  .action-btn.accent { background: var(--accent); color: #0a0a0a; border-color: var(--accent); font-weight: 600; }
+  .action-btn.accent:hover { background: var(--accent-dark); }
+
+  .prompt-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.9;
+    color: #ccc;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .prompt-box::-webkit-scrollbar { width: 6px; }
+  .prompt-box::-webkit-scrollbar-track { background: transparent; }
+  .prompt-box::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 3px; }
+
+  /* SAVED PRESETS PANEL */
+  .saved-panel {
+    margin-top: 28px;
+  }
+
+  .saved-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .saved-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .saved-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .saved-item:hover { border-color: var(--border-hover); }
+
+  .saved-item-name {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .saved-item-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .saved-item-actions { display: flex; gap: 8px; }
+
+  .icon-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .icon-btn:hover { border-color: var(--border-hover); color: var(--text); }
+  .icon-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+  .empty-state {
+    text-align: center;
+    padding: 32px;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--accent);
+    color: #0a0a0a;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.25s;
+    pointer-events: none;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* CHAR COUNTER */
+  .char-counter { font-size: 10px; color: var(--text-dim); float: right; margin-top: 3px; }
+  .char-counter.warn { color: #f5a623; }
+  .char-counter.over { color: var(--red); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .wrapper { grid-template-columns: 1fr; }
+    .sidebar { height: auto; position: static; }
+    .steps { grid-template-columns: 1fr; }
+    .topbar { padding: 0 16px; }
+    .sidebar { padding: 20px 16px; }
+    .main { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Google Ads Prompt Builder
+  </div>
+  <div class="topbar-right">
+    <span class="tag">Free Tool</span>
+    <button class="btn-small" onclick="saveCurrentAsPreset()">Save preset</button>
+    <button class="btn-small" onclick="clearAll()">Clear all</button>
+  </div>
+</div>
+
+<div class="wrapper">
+
+  <!-- SIDEBAR FORM -->
+  <div class="sidebar">
+
+    <!-- PRESETS -->
+    <div class="section-header">
+      <div class="section-num">★</div>
+      <div class="section-title">Quick presets</div>
+    </div>
+    <div class="preset-bar">
+      <button class="preset-btn" onclick="loadPreset('draftss')">Draftss</button>
+      <button class="preset-btn" onclick="loadPreset('saas')">SaaS</button>
+      <button class="preset-btn" onclick="loadPreset('ecomm')">Ecommerce</button>
+      <button class="preset-btn" onclick="loadPreset('agency')">Agency</button>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Brand identity</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Brand / product name</label>
+        <input id="brand" type="text" placeholder="e.g. Draftss">
+      </div>
+      <div class="field">
+        <label>Primary price</label>
+        <input id="price" type="text" placeholder="e.g. $440/month">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>What it does (1 sentence)</label>
+      <input id="what" type="text" placeholder="e.g. Unlimited graphic design subscription">
+    </div>
+
+    <div class="field">
+      <label>Core services / features</label>
+      <input id="services" type="text" placeholder="e.g. Graphic design, UI/UX, Web dev, Video editing">
+      <div class="field-tip">Comma separated</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Test price (optional)</label>
+        <input id="price2" type="text" placeholder="e.g. $245/month">
+      </div>
+      <div class="field">
+        <label>Primary CTA</label>
+        <input id="cta" type="text" placeholder="e.g. 7 Day Free Trial">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Social proof</label>
+      <input id="proof" type="text" placeholder="e.g. 4.8/5 Stars · Trusted by 1,000+ brands">
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>URL path 1</label>
+        <input id="path1" type="text" placeholder="/free-trial">
+      </div>
+      <div class="field">
+        <label>URL path 2</label>
+        <input id="path2" type="text" placeholder="/pricing">
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Audience & campaign</div>
+    </div>
+
+    <div class="field">
+      <label>Target audience / buyer persona</label>
+      <input id="audience" type="text" placeholder="e.g. Startup founders, Marketing managers">
+    </div>
+
+    <div class="field">
+      <label>Top pain points</label>
+      <textarea id="pains" rows="2" placeholder="e.g. Slow delivery, too expensive, no dedicated team"></textarea>
+    </div>
+
+    <div class="field-row-3">
+      <div class="field">
+        <label>Campaign type</label>
+        <select id="camptype">
+          <option value="Competitor targeting">Competitor</option>
+          <option value="Lead generation">Lead gen</option>
+          <option value="Sales / ecommerce">Sales</option>
+          <option value="Brand awareness">Awareness</option>
+          <option value="Retargeting / RLSA">Retargeting</option>
+          <option value="Performance Max">Perf Max</option>
+          <option value="App installs">App installs</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Location</label>
+        <input id="location" type="text" placeholder="US, Global">
+      </div>
+      <div class="field">
+        <label>RSA sets</label>
+        <select id="numsets">
+          <option value="1">1 set</option>
+          <option value="2">2 sets</option>
+          <option value="3" selected>3 sets</option>
+          <option value="5">5 sets</option>
+          <option value="10">10 sets</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Copy intelligence</div>
+    </div>
+
+    <div class="field">
+      <label>Your best-performing headlines (optional)</label>
+      <textarea id="winners" rows="3" placeholder="Paste your top CTR headlines from past campaigns here. Leave blank if new account."></textarea>
+      <div class="field-tip">Separate with | or new lines</div>
+    </div>
+
+    <div class="field">
+      <label>What NOT to do / avoid</label>
+      <textarea id="avoid" rows="2" placeholder="e.g. Vague headlines, over-pinning, no price anchor"></textarea>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Extensions</div>
+    </div>
+
+    <div class="field">
+      <label>Sitelink pages (max 6)</label>
+      <input id="sitelinks" type="text" placeholder="/Pricing, /Portfolio, /Reviews, /Free-Trial, /Services">
+    </div>
+
+    <div class="field">
+      <label>Callout highlights (max 8)</label>
+      <input id="callouts" type="text" placeholder="No Contracts, Quick Turnaround, 4.8/5 Rated, 24-48hr Delivery">
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Target</div>
+    </div>
+
+    <div class="field">
+      <label>Competitor name OR campaign goal ★</label>
+      <input id="target" type="text" placeholder="e.g. Kimp  —OR—  unlimited design subscription leads">
+    </div>
+
+    <div class="field">
+      <label>Active promotion (optional)</label>
+      <input id="promo" type="text" placeholder="e.g. 50% off first month, Free onboarding">
+    </div>
+
+    <button class="build-btn" onclick="buildPrompt()">
+      ↗ Generate prompt
+    </button>
+
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <div class="main-header">
+      <div class="main-title">Build <span>winning</span><br>Google Ads copy.</div>
+      <div class="main-sub">Fill in your brand details → generate a complete, AI-ready prompt → paste into ChatGPT or Claude.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-label">Fill the form</div>
+        <div class="step-desc">Add your brand info, services, price, CTA, and target competitor or goal.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-label">Generate prompt</div>
+        <div class="step-desc">Click "Generate prompt" to build a full RSA prompt built to Google's algorithm standards.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-label">Paste into AI</div>
+        <div class="step-desc">Copy and paste into ChatGPT, Claude, or Gemini. Get 15 headlines, 4 descriptions, extensions + recommendations.</div>
+      </div>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="output-panel" id="output-panel">
+      <div class="output-toolbar">
+        <div class="output-label">
+          <div class="output-dot"></div>
+          Prompt ready
+        </div>
+        <div class="output-actions">
+          <button class="action-btn" onclick="copyPrompt()">Copy prompt</button>
+          <button class="action-btn accent" onclick="openInClaude()">Open in Claude ↗</button>
+        </div>
+      </div>
+      <div class="prompt-box" id="prompt-out"></div>
+    </div>
+
+    <!-- SAVED PRESETS -->
+    <div class="saved-panel" id="saved-panel">
+      <div class="saved-title">Saved presets</div>
+      <div class="saved-list" id="saved-list">
+        <div class="empty-state" id="empty-state">No saved presets yet. Fill the form and click "Save preset" in the top bar.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── PRESETS ───
+const PRESETS = {
+  draftss: {
+    brand: 'Draftss', what: 'Unlimited graphic design + web dev subscription', price: '$440/month',
+    price2: '$245/month', services: 'Graphic design, UI/UX, Web development, Video editing, Motion graphics, Branding',
+    cta: '7 Day Risk Free Trial', proof: '4.8/5 Stars by Real Clients · Trusted by 1,000+ brands',
+    path1: '/remote-team', path2: '/subscription',
+    audience: 'Startup founders, Marketing managers, SaaS companies, D2C brands',
+    pains: 'Slow delivery from current agency, Too expensive, No dedicated team, Inconsistent quality',
+    camptype: 'Competitor targeting', location: 'US', numsets: '3',
+    winners: 'Hire Expert Team for $440/mo | Top #1 Designers & Developers | 7 Day Risk Free Trial | 4.8/5 Stars by Real Clients | {Keyword:$440 for Full Month of Design}',
+    avoid: 'Average or Poor Ad Strength, Too many pinned assets, Descriptions without specific services, Ads without price anchor',
+    sitelinks: '/Pricing, /Portfolio, /Reviews, /7-Day-Free-Trial, /White-Label-for-Agencies, /Services',
+    callouts: 'No Long Contracts, Quick Turnaround, 4.8/5 Rated, 24-48hr Delivery, White Label Ready, 1000+ Brands, Motion Graphics Included, Cancel Anytime',
+    target: '', promo: ''
+  },
+  saas: {
+    brand: '[Your SaaS Name]', what: '[What your SaaS does in 1 line]', price: '[e.g. $49/month]',
+    price2: 'Free plan available', services: '[Core features: e.g. Automation, Analytics, Integrations, API]',
+    cta: 'Start Free Trial', proof: '[e.g. 4.9/5 on G2 · 10,000+ teams]',
+    path1: '/free-trial', path2: '/pricing',
+    audience: 'SaaS founders, Product managers, Operations teams',
+    pains: 'Manual processes, Lack of visibility, Too many tools, High cost of alternatives',
+    camptype: 'Competitor targeting', location: 'Global', numsets: '3',
+    winners: '', avoid: '',
+    sitelinks: '/Pricing, /Features, /Integrations, /Case-Studies, /Demo, /Reviews',
+    callouts: 'No Credit Card Required, Free Forever Plan, 24/7 Support, 500+ Integrations, SOC2 Compliant, Cancel Anytime',
+    target: '[Competitor name]', promo: ''
+  },
+  ecomm: {
+    brand: '[Your Store Name]', what: '[What you sell]', price: '[e.g. From $29 / Free shipping]',
+    price2: '', services: '[Products: e.g. Skincare, Apparel, Home goods, Electronics]',
+    cta: 'Shop Now — Free Returns', proof: '[e.g. 4.8★ · 50,000+ happy customers]',
+    path1: '/sale', path2: '/new-arrivals',
+    audience: '[e.g. Women 25-45, Home decor enthusiasts, Gift buyers]',
+    pains: 'Overpriced alternatives, Slow shipping, Low quality, No easy returns',
+    camptype: 'Sales / ecommerce', location: 'US', numsets: '3',
+    winners: '', avoid: '',
+    sitelinks: '/Best-Sellers, /Sale, /New-Arrivals, /Free-Returns, /Reviews, /Gift-Guide',
+    callouts: 'Free Shipping Over $50, Easy 30-Day Returns, Sustainably Made, Same-Day Dispatch, 50,000+ Reviews, Gift Wrapping Available',
+    target: '[Competitor or product category]', promo: ''
+  },
+  agency: {
+    brand: '[Your Agency Name]', what: '[What your agency does]', price: '[e.g. From $2,000/month]',
+    price2: 'Free strategy call', services: '[Services: e.g. SEO, Paid ads, Social media, Web design, Branding]',
+    cta: 'Book Free Strategy Call', proof: '[e.g. $50M+ managed · 200+ clients · Google Premier Partner]',
+    path1: '/results', path2: '/free-audit',
+    audience: 'Business owners, CMOs, E-commerce brands, Local businesses',
+    pains: 'Not enough leads, Wasted ad spend, Agency doesn\'t communicate, No clear ROI',
+    camptype: 'Lead generation', location: '[Your city / country]', numsets: '3',
+    winners: '', avoid: '',
+    sitelinks: '/Case-Studies, /Services, /Pricing, /Free-Audit, /Reviews, /About-Us',
+    callouts: 'Google Premier Partner, No Long-Term Contracts, Weekly Reporting, Dedicated Account Manager, ROI-Focused, Free Audit',
+    target: '[Competitor agency name or service keyword]', promo: 'Free website audit — limited spots'
+  }
+};
+
+function loadPreset(key) {
+  const p = PRESETS[key];
+  if (!p) return;
+  Object.keys(p).forEach(k => {
+    const el = document.getElementById(k);
+    if (el) el.value = p[k];
+  });
+  showToast('Preset loaded — ' + (p.brand || key));
+}
+
+// ─── BUILD PROMPT ───
+function g(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+function buildPrompt() {
+  const brand = g('brand') || '[BRAND]';
+  const what = g('what') || '[PRODUCT DESCRIPTION]';
+  const price = g('price') || '[PRIMARY PRICE]';
+  const price2 = g('price2');
+  const services = g('services') || '[SERVICES]';
+  const cta = g('cta') || '[CTA]';
+  const proof = g('proof') || '[SOCIAL PROOF]';
+  const path1 = g('path1') || '/free-trial';
+  const path2 = g('path2') || '/pricing';
+  const audience = g('audience') || '[TARGET AUDIENCE]';
+  const pains = g('pains') || '[PAIN POINTS]';
+  const camptype = g('camptype');
+  const location = g('location') || 'Global';
+  const numsets = g('numsets') || '3';
+  const winners = g('winners');
+  const avoid = g('avoid');
+  const sitelinks = g('sitelinks') || '/Pricing, /Reviews, /Free-Trial, /Services, /Portfolio, /About';
+  const callouts = g('callouts') || '[CALLOUT HIGHLIGHTS]';
+  const target = g('target') || '[COMPETITOR OR GOAL]';
+  const promo = g('promo');
+
+  const price2Line = price2 ? `• Secondary / test price: ${price2}` : '';
+  const promoLine = promo ? `• Active promotion: ${promo}` : '';
+  const winnersBlock = winners
+    ? `YOUR BEST-PERFORMING HEADLINES (study the pattern, don't clone):\n${winners}`
+    : `YOUR BEST-PERFORMING HEADLINES:\nNo past data provided — generate from scratch using brand context above.`;
+  const avoidBlock = avoid ? `\nWHAT DOES NOT WORK / TO AVOID:\n${avoid}` : '';
+
+  const prompt =
+`You are a senior Google Ads director with 15+ years of experience managing campaigns across every major industry. You know RSA algorithm mechanics, Ad Strength requirements, pinning strategy, Quality Score levers, and what actually drives conversions — not just clicks.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BRAND CONTEXT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Brand / product: ${brand}
+• What it does: ${what}
+• Primary price / offer: ${price}
+${price2Line}
+• Core services / features: ${services}
+• Primary CTA: ${cta}
+• Social proof: ${proof}
+• Target audience: ${audience}
+• Display URL paths: ${path1} and ${path2}
+• Target location: ${location}
+• Campaign type: ${camptype}
+${promoLine}
+
+AUDIENCE PAIN POINTS:
+${pains}
+
+${winnersBlock}
+${avoidBlock}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 1 — DECODE THE BRIEF BEFORE WRITING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Before writing a single headline, identify and state:
+1. What does someone searching "${target}" actually want?
+2. Their top 3 emotional triggers (urgency / FOMO / trust / price sensitivity / curiosity)
+3. The #1 objection before they click
+4. What angle will make ${brand} stand out vs. what's already in the auction
+5. Funnel stage: awareness / consideration / decision
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 2 — WRITE ${numsets} COMPLETE RSA SET(S)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Write each set with a DIFFERENT variation angle:
+• Set 1: Price-led — make the value and cost undeniable
+• Set 2: Intent/competitor-aware — acknowledge what they searched, position ${brand} as the upgrade
+• Set 3: Risk-reversal — remove all fear, zero commitment, trial-first
+(If more than 3 sets: add social-proof-led, pain-led, curiosity-led, authority-led angles)
+
+FOR EACH RSA SET:
+
+HEADLINES (15 total — STRICT 30 character max including spaces)
+• H1 (PIN to position 1): Search intent match — price anchor OR service name OR key differentiator
+• H2 (PIN to position 2): Authority / USP — why ${brand} over everyone else in the auction
+• H3–H5: DKI variants + intent-aware. Use {KeyWord:fallback} for dynamic insertion. Add location if relevant.
+• H6–H8: Service breadth — rotate across features, team structure, coverage, delivery speed
+• H9–H11: Social proof + emotional ownership — specific numbers, testimonials, guarantees
+• H12–H13: Urgency / trial / offer — drive immediate action
+• H14–H15: Benefit anchors or secondary CTAs — reinforce the decision
+
+HEADLINE RULES (non-negotiable):
+✦ Every headline must make sense STANDALONE — it may appear without any others
+✦ No two headlines repeat the same idea or phrase
+✦ Sentence case only — never ALL CAPS or Title Case Throughout
+✦ Most important word in first 15 characters
+✦ Use numbers wherever possible — they anchor value and lift CTR
+✦ Active voice only
+✦ Power words: proven / instant / trusted / exclusive / official / guaranteed / award-winning / effortless
+✦ Show character count next to each headline: e.g. "Hire a team for $440/mo — 22 chars"
+
+DESCRIPTIONS (4 total — STRICT 90 character max each)
+• D1: Pain point or search intent → pivot to solution. Include primary service stack.
+• D2: Strongest USP + social proof + clear CTA
+• D3: Urgency or overcome top objection. Mention the offer or trial.
+• D4: Benefit-stack (2–3 benefits) + CTA. Include price if possible.
+
+DISPLAY URL PATHS: ${path1} and ${path2}
+
+PINNING STRATEGY:
+• Pin strongest intent-matching headline to Position 1
+• Pin strongest USP/authority headline to Position 2 (list 1–2 alternates for same position)
+• Leave ALL others unpinned — let Google ML test combinations
+• Briefly explain WHY you chose these specific pins for this audience
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 3 — EXTENSIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SITELINKS (6 total):
+Pages to use: ${sitelinks}
+For each sitelink write: title (max 25 chars) + 2-line description (max 35 chars each line)
+
+CALLOUT EXTENSIONS (8 total — max 25 chars each):
+Highlights to include: ${callouts}
+
+STRUCTURED SNIPPETS:
+Choose the best header for ${brand}: Services / Products / Benefits / Features / Courses
+List 6–8 specific values.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 4 — PERFORMANCE RECOMMENDATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Give 7 specific, actionable recommendations:
+
+1. First A/B test to run — highest-impact single variable to test
+2. Landing page alignment — what the landing page headline MUST say to mirror the ad
+3. Negative keywords to add immediately for this campaign type and target
+4. Audience signals to layer — in-market, remarketing, customer match recommendations
+5. Bidding strategy — based on campaign goal and current conversion volume
+6. Quality Score lever — what to fix in ad relevance, expected CTR, or landing page experience
+7. Contrarian tactic — one move most competitors in this space are NOT doing right now
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT — use this exact structure:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+─── CAMPAIGN BRIEF SUMMARY ───
+[Decoded intent, emotional triggers, objection, differentiation angle, funnel stage]
+
+─── AD SET 1: [Angle name] ───
+H1 (PIN pos 1): [headline] — [X chars]
+H2 (PIN pos 2): [headline] — [X chars]
+H3: [headline] — [X chars]
+H4: [headline] — [X chars]
+H5: [headline] — [X chars]
+H6: [headline] — [X chars]
+H7: [headline] — [X chars]
+H8: [headline] — [X chars]
+H9: [headline] — [X chars]
+H10: [headline] — [X chars]
+H11: [headline] — [X chars]
+H12: [headline] — [X chars]
+H13: [headline] — [X chars]
+H14: [headline] — [X chars]
+H15: [headline] — [X chars]
+
+D1: [description] — [X chars]
+D2: [description] — [X chars]
+D3: [description] — [X chars]
+D4: [description] — [X chars]
+
+Display paths: [path1] / [path2]
+Pinning: [explanation]
+
+─── AD SET 2: [Angle name] ───
+[same structure]
+
+─── AD SET 3: [Angle name] ───
+[same structure]
+
+─── EXTENSIONS ───
+Sitelinks: [all 6 with titles + descriptions]
+Callouts: [all 8]
+Structured snippets: [header + values]
+
+─── PERFORMANCE RECOMMENDATIONS ───
+1. [...]
+2. [...]
+...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+YOUR TARGET FOR THIS RUN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Competitor / Goal: ${target}
+RSA sets needed: ${numsets}
+Location: ${location}
+Campaign type: ${camptype}
+${promo ? 'Active offer: ' + promo : ''}
+
+Now write all ${numsets} complete RSA set(s) in full. Do not summarize or skip any section.`;
+
+  document.getElementById('prompt-out').textContent = prompt;
+  const panel = document.getElementById('output-panel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showToast('Prompt ready — copy and paste into any AI');
+}
+
+// ─── COPY ───
+function copyPrompt() {
+  const text = document.getElementById('prompt-out').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+}
+
+// ─── OPEN IN CLAUDE ───
+function openInClaude() {
+  const text = document.getElementById('prompt-out').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Prompt copied — opening Claude...');
+    setTimeout(() => window.open('https://claude.ai', '_blank'), 600);
+  });
+}
+
+// ─── SAVE / LOAD PRESETS (localStorage) ───
+function saveCurrentAsPreset() {
+  const name = prompt('Name this preset (e.g. "Draftss vs Kimp — Q1"):');
+  if (!name) return;
+  const fields = ['brand','what','price','price2','services','cta','proof','path1','path2','audience','pains','camptype','location','numsets','winners','avoid','sitelinks','callouts','target','promo'];
+  const data = {};
+  fields.forEach(f => { data[f] = g(f); });
+  data._name = name;
+  data._saved = new Date().toLocaleDateString();
+  const existing = JSON.parse(localStorage.getItem('ads_presets') || '[]');
+  existing.unshift(data);
+  localStorage.setItem('ads_presets', JSON.stringify(existing));
+  renderSaved();
+  showToast('Preset saved: ' + name);
+}
+
+function renderSaved() {
+  const list = document.getElementById('saved-list');
+  const empty = document.getElementById('empty-state');
+  const presets = JSON.parse(localStorage.getItem('ads_presets') || '[]');
+  if (!presets.length) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  list.innerHTML = presets.map((p, i) => `
+    <div class="saved-item">
+      <div>
+        <div class="saved-item-name">${p._name || 'Unnamed'}</div>
+        <div class="saved-item-meta">${p.brand || ''} · ${p.camptype || ''} · Saved ${p._saved || ''}</div>
+      </div>
+      <div class="saved-item-actions">
+        <button class="icon-btn" onclick="loadSaved(${i})">Load</button>
+        <button class="icon-btn del" onclick="deleteSaved(${i})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadSaved(i) {
+  const presets = JSON.parse(localStorage.getItem('ads_presets') || '[]');
+  const p = presets[i];
+  if (!p) return;
+  Object.keys(p).forEach(k => {
+    if (k.startsWith('_')) return;
+    const el = document.getElementById(k);
+    if (el) el.value = p[k] || '';
+  });
+  showToast('Preset loaded: ' + p._name);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deleteSaved(i) {
+  if (!confirm('Delete this preset?')) return;
+  const presets = JSON.parse(localStorage.getItem('ads_presets') || '[]');
+  presets.splice(i, 1);
+  localStorage.setItem('ads_presets', JSON.stringify(presets));
+  renderSaved();
+  showToast('Preset deleted');
+}
+
+// ─── CLEAR ALL ───
+function clearAll() {
+  if (!confirm('Clear all fields?')) return;
+  document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  document.getElementById('output-panel').classList.remove('visible');
+  showToast('All fields cleared');
+}
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ─── INIT ───
+renderSaved();
+</script>
+</body>
+</html>
